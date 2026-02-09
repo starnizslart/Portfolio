@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Punyaphat | Portfolio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- AOS Animation Library CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        /* Custom Animations */
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        .animate-blob { animation: blob 10s infinite alternate; }
+        .animation-delay-2000 { animation-delay: 2s; }
+        .animation-delay-4000 { animation-delay: 4s; }
+        
+        .animate-gradient {
+            background-size: 200% auto;
+            animation: gradient 4s linear infinite;
+        }
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Typing Effect Cursor */
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* Mouse Spotlight */
+        #spotlight {
+            background: radial-gradient(600px circle at var(--x) var(--y), rgba(34, 211, 238, 0.06), transparent 40%);
+            z-index: 1;
+        }
+
+        /* Glassmorphism Enhancements */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Hide scrollbar for clean modal */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-200 font-sans selection:bg-cyan-500 selection:text-white overflow-x-hidden relative">
+
+    <!-- Mouse Spotlight Effect -->
+    <div id="spotlight" class="fixed inset-0 pointer-events-none transition-opacity duration-300"></div>
+
+    <!-- Background Effects -->
+    <div class="fixed inset-0 z-0 opacity-30 pointer-events-none">
+        <div class="absolute top-0 left-0 w-[500px] h-[500px] bg-blue-600 rounded-full mix-blend-multiply filter blur-[100px] animate-blob opacity-40"></div>
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-600 rounded-full mix-blend-multiply filter blur-[100px] animate-blob animation-delay-2000 opacity-40"></div>
+        <div class="absolute -bottom-32 left-20 w-[500px] h-[500px] bg-cyan-600 rounded-full mix-blend-multiply filter blur-[100px] animate-blob animation-delay-4000 opacity-40"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 py-5" data-aos="fade-down" data-aos-duration="1000">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <div class="text-2xl font-bold tracking-tighter cursor-pointer group" onclick="scrollToSection('home')">
+                <span class="text-cyan-400 group-hover:text-cyan-300 transition-colors drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]">FEW</span>
+                <span class="text-slate-100">.DEV</span>
+            </div>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex space-x-8">
+                <button onclick="scrollToSection('home')" class="nav-item text-sm font-medium tracking-wide text-slate-400 hover:text-cyan-400 transition-all hover:scale-105">HOME</button>
+                <button onclick="scrollToSection('about')" class="nav-item text-sm font-medium tracking-wide text-slate-400 hover:text-cyan-400 transition-all hover:scale-105">ABOUT</button>
+                <button onclick="scrollToSection('skills')" class="nav-item text-sm font-medium tracking-wide text-slate-400 hover:text-cyan-400 transition-all hover:scale-105">SKILLS</button>
+                <button onclick="scrollToSection('projects')" class="nav-item text-sm font-medium tracking-wide text-slate-400 hover:text-cyan-400 transition-all hover:scale-105">PROJECTS</button>
+                <button onclick="scrollToSection('contact')" class="nav-item text-sm font-medium tracking-wide text-slate-400 hover:text-cyan-400 transition-all hover:scale-105">CONTACT</button>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden text-slate-300 hover:text-white transition-colors" onclick="toggleMobileMenu()">
+                <i data-lucide="menu" class="w-7 h-7"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 w-full bg-slate-900/95 backdrop-blur-xl border-b border-slate-800 p-6 flex-col space-y-4 shadow-2xl transition-all duration-300">
+            <button onclick="scrollToSection('home')" class="text-left text-lg font-medium text-slate-300 hover:text-cyan-400 py-2 border-b border-slate-800/50">Home</button>
+            <button onclick="scrollToSection('about')" class="text-left text-lg font-medium text-slate-300 hover:text-cyan-400 py-2 border-b border-slate-800/50">About</button>
+            <button onclick="scrollToSection('skills')" class="text-left text-lg font-medium text-slate-300 hover:text-cyan-400 py-2 border-b border-slate-800/50">Skills</button>
+            <button onclick="scrollToSection('projects')" class="text-left text-lg font-medium text-slate-300 hover:text-cyan-400 py-2 border-b border-slate-800/50">Projects</button>
+            <button onclick="scrollToSection('contact')" class="text-left text-lg font-medium text-slate-300 hover:text-cyan-400 py-2 border-b border-slate-800/50">Contact</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative h-screen flex items-center justify-center pt-20 px-6">
+        <div class="text-center z-10 max-w-4xl mx-auto space-y-6">
+            <div class="inline-block px-4 py-1.5 mb-4 border border-cyan-500/30 rounded-full bg-cyan-500/10 backdrop-blur-sm" data-aos="fade-down" data-aos-delay="200">
+                <span class="text-cyan-400 text-sm font-semibold tracking-wider flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                    AVAILABLE FOR WORK
+                </span>
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-white mb-2" data-aos="zoom-in" data-aos-duration="1200">
+                Hi, I'm <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 animate-gradient">Punyaphat</span>
+            </h1>
+            
+            <div data-aos="fade-up" data-aos-delay="400">
+                <p class="text-xl md:text-2xl text-slate-400 font-light max-w-2xl mx-auto typing-cursor inline-block">
+                    Web & Full Stack Developer
+                </p>
+                <p class="text-lg text-slate-500 font-light mt-2">Creating impactful digital experiences with modern technology.</p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-center gap-4 mt-8" data-aos="fade-up" data-aos-delay="600">
+                <button onclick="scrollToSection('projects')" class="px-8 py-4 bg-cyan-500 hover:bg-cyan-600 text-slate-900 font-bold rounded-full transition-all transform hover:scale-110 hover:shadow-[0_0_30px_rgba(6,182,212,0.6)] relative overflow-hidden group">
+                    <span class="relative z-10">View My Work</span>
+                    <div class="absolute inset-0 h-full w-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out"></div>
+                </button>
+                <button onclick="scrollToSection('contact')" class="px-8 py-4 border border-slate-600 hover:border-cyan-400 text-slate-300 hover:text-cyan-400 font-semibold rounded-full transition-all hover:bg-slate-800/50 hover:scale-105">
+                    Contact Me
+                </button>
+            </div>
+        </div>
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce text-slate-500" data-aos="fade-in" data-aos-delay="1000">
+            <i data-lucide="chevron-down" class="w-8 h-8"></i>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 relative z-10">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 md:mb-20" data-aos="fade-up">
+                <h2 class="text-3xl md:text-5xl font-bold text-white mb-4">About Me</h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-cyan-500 to-blue-500 mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid md:grid-cols-5 gap-12 items-start">
+                <div class="md:col-span-2 relative group" data-aos="fade-right" data-aos-duration="1000">
+                    <div class="absolute -inset-1 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl blur opacity-30 group-hover:opacity-75 transition duration-1000 animate-pulse"></div>
+                    <div class="relative bg-slate-900 border border-slate-800 rounded-2xl p-2 overflow-hidden shadow-2xl transform transition duration-500 group-hover:-translate-y-2">
+                        <div class="aspect-[3/4] w-full overflow-hidden rounded-xl bg-slate-800 relative">
+                            <!-- รูปโปรไฟล์ -->
+                            <img src="https://i.postimg.cc/brkJjShd/eda8ee32-a718-4a0f-b1df-5c3cdeff5405-(1).jpg" alt="Profile" class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-700">
+                            <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-slate-950/90 to-transparent p-6 pt-20">
+                                <h3 class="text-2xl font-bold text-white drop-shadow-md">FEW</h3>
+                                <p class="text-cyan-400 text-sm font-semibold">Web / Full Stack Developer</p>
+                            </div>
+                        </div>
+                        <div class="p-4 space-y-3">
+                            <div class="flex items-center text-slate-300 text-sm hover:text-cyan-400 transition-colors">
+                                <i data-lucide="mail" class="w-4 h-4 mr-3 text-cyan-500"></i>
+                                <span class="truncate">starnizslart@gmail.com</span>
+                            </div>
+                            <div class="flex items-center text-slate-300 text-sm hover:text-cyan-400 transition-colors">
+                                <i data-lucide="phone" class="w-4 h-4 mr-3 text-cyan-500"></i>
+                                <span>098-7217034</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-3 space-y-8" data-aos="fade-left" data-aos-duration="1000">
+                    <div class="glass-card p-8 rounded-2xl hover:shadow-[0_0_30px_rgba(34,211,238,0.1)] transition-all duration-300">
+                        <h3 class="text-2xl font-bold text-white mb-4">
+                            Hello, I'm <span class="text-cyan-400">Punyaphat Dangngoen</span>
+                        </h3>
+                        <p class="text-slate-300 leading-relaxed mb-6 text-lg">
+                            ปัจจุบันเป็นนักศึกษาสาขาเทคโนโลยีสารสนเทศและนวัตกรรมดิจิทัล (ITDI) 
+                            คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏสงขลา
+                        </p>
+                        <p class="text-slate-400 leading-relaxed">
+                            ผมมีความหลงใหลในการพัฒนาเว็บไซต์อย่างมาก โดยผสมผสานความคิดสร้างสรรค์ในการออกแบบ Front-end 
+                            เข้ากับความเข้าใจระบบ Back-end ที่แข็งแกร่ง เป้าหมายของผมคือการสร้าง Web Application 
+                            ที่ใช้งานง่าย มีเสถียรภาพ และตอบโจทย์ทางธุรกิจ
+                        </p>
+                        <div class="flex flex-wrap gap-4 mt-6">
+                            <div class="inline-flex items-center px-4 py-2 bg-yellow-500/10 text-yellow-500 rounded-lg border border-yellow-500/20 hover:bg-yellow-500/20 transition-colors cursor-default">
+                                <i data-lucide="award" class="w-4 h-4 mr-2"></i>
+                                <span class="font-bold">GPAX 3.75</span>
+                            </div>
+                            <div class="inline-flex items-center px-4 py-2 bg-slate-800 text-slate-300 rounded-lg border border-slate-700 hover:border-cyan-500 transition-colors cursor-default">
+                                <i data-lucide="map-pin" class="w-4 h-4 mr-2 text-cyan-500"></i>
+                                <span>Pattani, Thailand</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-4 flex items-center">
+                            <span class="w-8 h-1 bg-cyan-500 mr-3 rounded-full"></span>
+                            Soft Skills
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div class="flex items-center p-3 bg-slate-800/30 border border-slate-700/50 rounded-lg hover:bg-slate-800 hover:border-cyan-500/50 transition-all hover:translate-x-2">
+                                <div class="w-1.5 h-1.5 bg-cyan-400 rounded-full mr-3 shadow-[0_0_10px_rgba(34,211,238,0.8)]"></div><span class="text-slate-300 text-sm">Fast Learner</span>
+                            </div>
+                            <div class="flex items-center p-3 bg-slate-800/30 border border-slate-700/50 rounded-lg hover:bg-slate-800 hover:border-cyan-500/50 transition-all hover:translate-x-2">
+                                <div class="w-1.5 h-1.5 bg-cyan-400 rounded-full mr-3 shadow-[0_0_10px_rgba(34,211,238,0.8)]"></div><span class="text-slate-300 text-sm">Creative Problem Solving</span>
+                            </div>
+                            <div class="flex items-center p-3 bg-slate-800/30 border border-slate-700/50 rounded-lg hover:bg-slate-800 hover:border-cyan-500/50 transition-all hover:translate-x-2">
+                                <div class="w-1.5 h-1.5 bg-cyan-400 rounded-full mr-3 shadow-[0_0_10px_rgba(34,211,238,0.8)]"></div><span class="text-slate-300 text-sm">Adaptability</span>
+                            </div>
+                            <div class="flex items-center p-3 bg-slate-800/30 border border-slate-700/50 rounded-lg hover:bg-slate-800 hover:border-cyan-500/50 transition-all hover:translate-x-2">
+                                <div class="w-1.5 h-1.5 bg-cyan-400 rounded-full mr-3 shadow-[0_0_10px_rgba(34,211,238,0.8)]"></div><span class="text-slate-300 text-sm">Collaboration</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-24 bg-slate-900/50 relative z-10 backdrop-blur-sm">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-5xl font-bold text-white mb-4">Technical Skills</h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-cyan-500 to-blue-500 mx-auto rounded-full"></div>
+            </div>
+            <div id="skills-container" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                <!-- Skills generated by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-24 relative z-10">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12" data-aos="fade-up">
+                <div>
+                    <h2 class="text-4xl md:text-6xl font-bold text-white mb-2">Featured Projects</h2>
+                    <p class="text-slate-400 text-lg">ผลงานที่ภาคภูมิใจและการพัฒนาทักษะ</p>
+                </div>
+                <div class="hidden md:block text-right">
+                    <span class="text-cyan-500 font-mono text-xl">01 // 06</span>
+                </div>
+            </div>
+            <div id="projects-container" class="grid md:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Projects generated by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Modal -->
+    <div id="modal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden opacity-0 transition-all duration-300">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto no-scrollbar shadow-2xl relative transform scale-90 transition-all duration-300" id="modal-content">
+            <div class="h-64 md:h-80 w-full relative bg-slate-950 overflow-hidden">
+                <!-- Blur Background -->
+                <div id="modal-blur-bg" class="absolute inset-0 bg-cover bg-center blur-xl opacity-30"></div>
+                <!-- Main Image -->
+                <img id="modal-image" src="" class="w-full h-full object-contain relative z-10">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent z-20"></div>
+                <button onclick="closeModal()" class="absolute top-4 right-4 bg-black/40 hover:bg-black/60 backdrop-blur-md text-white p-2 rounded-full transition-all border border-white/10 z-30 cursor-pointer hover:rotate-90">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <div class="p-8 relative">
+                <div class="-mt-12 mb-4 relative z-10">
+                    <span id="modal-category" class="px-4 py-2 bg-slate-800 text-cyan-400 text-sm font-bold rounded-lg border border-slate-700 shadow-lg inline-block backdrop-blur-md"></span>
+                </div>
+                <h2 id="modal-title" class="text-3xl md:text-4xl font-bold text-white mb-6"></h2>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="md:col-span-2 space-y-6">
+                        <div>
+                            <h4 class="text-slate-200 font-semibold mb-3 flex items-center">
+                                <i data-lucide="layout" class="w-4 h-4 mr-2 text-cyan-500"></i> Project Detail
+                            </h4>
+                            <p id="modal-detail" class="text-slate-400 leading-relaxed text-lg"></p>
+                        </div>
+                    </div>
+                    <div class="space-y-6">
+                        <div class="bg-slate-800/50 p-6 rounded-xl border border-slate-700/50 hover:border-cyan-500/30 transition-colors">
+                            <h4 class="text-slate-200 font-semibold mb-4 flex items-center">
+                                <i data-lucide="code" class="w-4 h-4 mr-2 text-purple-500"></i> Technologies
+                            </h4>
+                            <div id="modal-tech" class="flex flex-wrap gap-2"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8 pt-6 border-t border-slate-800 flex justify-end">
+                    <button onclick="closeModal()" class="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl transition-colors font-medium border border-slate-700 hover:border-slate-600">Close Project</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 bg-slate-900 border-t border-slate-800 relative z-10">
+        <div class="container mx-auto px-6 max-w-4xl" data-aos="zoom-in-up">
+            <div class="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-3xl p-10 md:p-16 text-center relative overflow-hidden group">
+                <div class="absolute -top-24 -left-24 w-64 h-64 bg-cyan-500 rounded-full mix-blend-screen filter blur-3xl opacity-10 group-hover:opacity-20 transition-opacity duration-700"></div>
+                <div class="absolute -bottom-24 -right-24 w-64 h-64 bg-purple-500 rounded-full mix-blend-screen filter blur-3xl opacity-10 group-hover:opacity-20 transition-opacity duration-700"></div>
+                <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">Let's Work Together</h2>
+                <p class="text-slate-400 mb-10 text-lg">ผมพร้อมที่จะเรียนรู้และเติบโตไปกับองค์กรของคุณ <br/> สามารถติดต่อผมได้ผ่านช่องทางด้านล่างนี้</p>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <a href="mailto:starnizslart@gmail.com" class="flex items-center justify-center p-4 bg-slate-950/50 border border-slate-700 rounded-xl hover:border-cyan-500 hover:text-cyan-400 transition-all group hover:scale-105">
+                        <i data-lucide="mail" class="w-5 h-5 mr-3 group-hover:scale-110 transition-transform"></i>
+                        <span>starnizslart@gmail.com</span>
+                    </a>
+                    <a href="tel:098-7217034" class="flex items-center justify-center p-4 bg-slate-950/50 border border-slate-700 rounded-xl hover:border-cyan-500 hover:text-cyan-400 transition-all group hover:scale-105">
+                        <i data-lucide="phone" class="w-5 h-5 mr-3 group-hover:scale-110 transition-transform"></i>
+                        <span>098-7217034</span>
+                    </a>
+                </div>
+                <div class="mt-12 pt-8 border-t border-slate-700/50 flex flex-col md:flex-row justify-between items-center text-slate-500 text-sm">
+                    <p>© 2026 Punyaphat Dangngoen. All rights reserved.</p>
+                    <div class="mt-4 md:mt-0"><p>Pattani, Thailand</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AOS Animation Library JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <script>
+        // Initialize Animations
+        AOS.init({
+            once: true, // ทำ animation แค่ครั้งเดียวตอนเลื่อนผ่าน
+            offset: 50,
+            duration: 800,
+            easing: 'ease-out-cubic',
+        });
+
+        // Mouse Spotlight Effect
+        const spotlight = document.getElementById('spotlight');
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX;
+            const y = e.clientY;
+            spotlight.style.setProperty('--x', x + 'px');
+            spotlight.style.setProperty('--y', y + 'px');
+        });
+
+        // --- DATA ---
+        const skills = [
+            { name: "HTML/CSS", icon: "layout", color: "text-orange-400" },
+            { name: "JavaScript", icon: "code", color: "text-yellow-400" },
+            { name: "Flutter/Dart", icon: "smartphone", color: "text-cyan-400" },
+            { name: "Python", icon: "code", color: "text-blue-400" },
+            { name: "PHP", icon: "server", color: "text-indigo-400" },
+            { name: "MySQL", icon: "database", color: "text-blue-500" },
+            { name: "C++", icon: "code", color: "text-blue-300" },
+            { name: "Arduino", icon: "cpu", color: "text-teal-400" },
+            { name: "Git", icon: "github", color: "text-white" },
+            { name: "Android Studio", icon: "smartphone", color: "text-green-400" },
+            { name: "VS Code", icon: "code", color: "text-blue-400" },
+            { name: "MariaDB", icon: "database", color: "text-brown-400" },
+        ];
+
+        const projects = [
+            {
+                id: 1,
+                title: "Web Application: Dashboard System",
+                category: "Web Development",
+                description: "ระบบ Dashboard สำหรับวิเคราะห์ยอดขาย แสดงผลข้อมูลแบบ Real-time visualization",
+                tech: ["Google App Script", "Google Sheets", "HTML/CSS", "JavaScript"],
+                detail: "พัฒนาเว็บไซต์โดยใช้ Google App Script เชื่อมต่อกับ Google Sheet เป็น Database ผสมผสาน HTML/CSS/JS เพื่อดึงข้อมูลมาแสดงผลในรูปแบบกราฟและตัวเลขที่สวยงาม ช่วยให้เจ้าของร้านวิเคราะห์ข้อมูลได้ง่ายขึ้น",
+                image: "https://i.postimg.cc/vmWTjSWJ/dashboard.png",
+                color: "from-blue-500 to-cyan-400"
+            },
+            {
+                id: 2,
+                title: "AI-Powered Classroom Assistant",
+                category: "AI & Chatbot",
+                description: "ผู้ช่วยเสมือนจริงในชั้นเรียน ลดภาระการตอบคำถามซ้ำๆ ผ่าน LINE OA",
+                tech: ["Line OA", "AI Model", "Python", "API"],
+                detail: "พัฒนาระบบ Virtual Assistant ด้วย n&n รับข้อความจากนักศึกษาผ่าน Line Official Account และส่งต่อไปยัง AI Model เพื่อประมวลผลและตอบคำถามเกี่ยวกับรายวิชาหรือกำหนดการต่างๆ อัตโนมัติ",
+                image: "https://i.postimg.cc/g0Q9VYXp/aisistant.png",
+                color: "from-purple-500 to-pink-400"
+            },
+            {
+                id: 3,
+                title: "Football Team Management (eFHUB 25)",
+                category: "Simulation / Algorithm",
+                description: "แอปพลิเคชันจำลองสถานการณ์การบริหารทีมฟุตบอล เน้นการเขียน Algorithm",
+                tech: ["Algorithm Design", "Logic", "Simulation"],
+                detail: "ผู้ใช้งานรับบทเป็นผู้จัดการทีม วางแผน จัดตัวผู้เล่น และซื้อขายนักเตะ จุดเด่นคือการเขียน Algorithm ที่ซับซ้อนเพื่อจำลองผลลัพธ์การแข่งขันและตลาดนักเตะ",
+                image: "https://i.postimg.cc/FRKb0nCD/football.png",
+                color: "from-green-500 to-emerald-400"
+            },
+            {
+                id: 4,
+                title: "IoT Smart Parking System",
+                category: "IoT / Hardware",
+                description: "ระบบลานจอดรถอัจฉริยะ ควบคุมไม้กั้นและไฟอัตโนมัติ",
+                tech: ["Arduino IDE", "C++", "Sensors", "Servo Motor"],
+                detail: "เขียนโปรแกรม Firmware ควบคุม Arduino จัดการ Input จากเซ็นเซอร์เพื่อสั่งงาน Servo Motor เปิด-ปิดไม้กั้น และควบคุมระบบไฟในลานจอดรถ",
+                image: "https://i.postimg.cc/gc8H95LK/iot.png",
+                color: "from-orange-500 to-red-400"
+            },
+            {
+                id: 5,
+                title: "Movie Finder App (MOVIETIME)",
+                category: "Mobile App",
+                description: "แอปฯ ค้นหาหนัง ดึงข้อมูล Real-time ผ่าน API",
+                tech: ["Flutter", "Dart", "Android Studio", "REST API"],
+                detail: "พัฒนา Mobile Application ด้วย Flutter เชื่อมต่อ External API เพื่อดึงข้อมูลภาพยนตร์ เรตติ้ง และเรื่องย่อมาแสดงผลแบบ Real-time",
+                image: "https://i.postimg.cc/YS2t7JS2/movieapp.png",
+                color: "from-yellow-500 to-amber-400"
+            },
+            {
+                id: 6,
+                title: "Story Prompt (Rocket Drive)",
+                category: "Mobile App",
+                description: "แอปพลิเคชันเพื่อความบันเทิง สำหรับสุ่มหัวข้อเรื่องราว",
+                tech: ["Flutter", "Dart", "PlayStore Deployment"],
+                detail: "แอปพลิเคชันสำหรับนักเขียนหรือผู้ต้องการไอเดีย สุ่มประโยค Story Prompt พัฒนาจนสามารถนำขึ้น PlayStore ได้จริง",
+                image: "https://i.postimg.cc/MpTs858g/storyprompt.png",
+                color: "from-indigo-500 to-violet-400"
+            }
+        ];
+
+        // --- RENDER SKILLS ---
+        const skillsContainer = document.getElementById('skills-container');
+        skills.forEach((skill, index) => {
+            const div = document.createElement('div');
+            // Add animation with stagger delay
+            div.setAttribute('data-aos', 'zoom-in');
+            div.setAttribute('data-aos-delay', index * 50);
+            
+            div.className = "glass-card flex flex-col items-center justify-center p-6 rounded-xl hover:-translate-y-2 hover:shadow-[0_0_20px_rgba(34,211,238,0.15)] transition-all duration-300 group cursor-default";
+            div.innerHTML = `
+                <div class="mb-3 transform group-hover:scale-110 transition-transform duration-300 ${skill.color} drop-shadow-lg">
+                    <i data-lucide="${skill.icon}" class="w-8 h-8"></i>
+                </div>
+                <span class="text-slate-300 font-medium group-hover:text-white transition-colors">${skill.name}</span>
+            `;
+            skillsContainer.appendChild(div);
+        });
+
+        // --- RENDER PROJECTS ---
+        const projectsContainer = document.getElementById('projects-container');
+        projects.forEach((project, index) => {
+            const div = document.createElement('div');
+            // Add animation
+            div.setAttribute('data-aos', 'fade-up');
+            div.setAttribute('data-aos-delay', index * 100);
+            
+            div.className = "group relative bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden hover:border-cyan-500/50 transition-all duration-300 cursor-pointer h-full flex flex-col hover:-translate-y-2 hover:shadow-2xl hover:shadow-cyan-500/20";
+            div.onclick = () => openModal(project);
+            
+            // Image section with Blur Fix
+            div.innerHTML = `
+                <div class="h-56 w-full relative overflow-hidden bg-slate-950">
+                    <div class="absolute inset-0 bg-cover bg-center blur-md opacity-40 transform scale-110 transition-transform duration-700 group-hover:scale-125" style="background-image: url('${project.image}')"></div>
+                    <img src="${project.image}" alt="${project.title}" class="w-full h-full object-contain relative z-10 p-2 transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors z-15"></div>
+                </div>
+                <div class="p-6 flex-grow flex flex-col relative z-10 bg-slate-900/95 backdrop-blur-sm group-hover:bg-slate-900 transition-colors">
+                    <div class="text-xs font-bold text-cyan-500 mb-2 uppercase tracking-widest">${project.category}</div>
+                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors">${project.title}</h3>
+                    <p class="text-slate-400 text-sm mb-4 line-clamp-3 flex-grow">${project.description}</p>
+                    <div class="flex flex-wrap gap-2 mt-auto">
+                        ${project.tech.slice(0, 3).map(t => `<span class="px-2 py-1 bg-slate-800 text-slate-400 text-xs rounded border border-slate-700 group-hover:border-cyan-500/30 transition-colors">${t}</span>`).join('')}
+                        ${project.tech.length > 3 ? `<span class="px-2 py-1 bg-slate-800 text-slate-400 text-xs rounded border border-slate-700 group-hover:border-cyan-500/30">+${project.tech.length - 3}</span>` : ''}
+                    </div>
+                </div>
+                <div class="absolute top-4 right-4 bg-slate-950/80 backdrop-blur-sm p-2 rounded-full opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300 border border-slate-700 z-20 hover:bg-cyan-500/10 hover:border-cyan-500">
+                    <i data-lucide="external-link" class="w-4 h-4 text-cyan-400"></i>
+                </div>
+            `;
+            projectsContainer.appendChild(div);
+        });
+
+        // --- INTERACTIVITY ---
+        
+        // Scroll Effect Navbar
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-slate-900/80', 'backdrop-blur-md', 'border-b', 'border-slate-800', 'py-3', 'shadow-lg');
+                navbar.classList.remove('py-5');
+            } else {
+                navbar.classList.remove('bg-slate-900/80', 'backdrop-blur-md', 'border-b', 'border-slate-800', 'py-3', 'shadow-lg');
+                navbar.classList.add('py-5');
+            }
+        });
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('mobile-menu').classList.add('hidden');
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        // Modal Logic
+        const modal = document.getElementById('modal');
+        const modalContent = document.getElementById('modal-content');
+        
+        function openModal(project) {
+            document.getElementById('modal-title').innerText = project.title;
+            document.getElementById('modal-category').innerText = project.category;
+            document.getElementById('modal-detail').innerText = project.detail;
+            document.getElementById('modal-image').src = project.image;
+            document.getElementById('modal-blur-bg').style.backgroundImage = `url('${project.image}')`;
+            
+            const techContainer = document.getElementById('modal-tech');
+            techContainer.innerHTML = project.tech.map(t => `<span class="px-3 py-1.5 bg-slate-800 text-cyan-300 text-sm rounded-lg border border-slate-700 hover:border-cyan-500/50 transition-colors">${t}</span>`).join('');
+            
+            modal.classList.remove('hidden');
+            // Small delay to allow display:block to apply before opacity transition
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-90');
+                modalContent.classList.add('scale-100');
+            }, 10);
+            
+            lucide.createIcons();
+        }
+
+        function closeModal() {
+            modal.classList.add('opacity-0');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-90');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        lucide.createIcons();
+    </script>
+</body>
+</html>
