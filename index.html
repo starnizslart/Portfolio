@@ -246,7 +246,7 @@
                     <p class="text-slate-400 text-lg">ผลงานที่ภาคภูมิใจและการพัฒนาทักษะ</p>
                 </div>
                 <div class="hidden md:block text-right">
-                    <span class="text-cyan-500 font-mono text-xl">01 // 07</span>
+                    <span class="text-cyan-500 font-mono text-xl">01 // 08</span>
                 </div>
             </div>
             <div id="projects-container" class="grid md:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -291,7 +291,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="mt-8 pt-6 border-t border-slate-800 flex justify-end">
+                <div class="mt-8 pt-6 border-t border-slate-800 flex justify-end gap-3">
+                    <a id="modal-demo-link" href="#" target="_blank" class="hidden px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white rounded-xl transition-colors font-medium shadow-lg shadow-cyan-500/30 items-center gap-2">
+                        <i data-lucide="external-link" class="w-4 h-4"></i> ดูเว็บไซต์จริง (Live Demo)
+                    </a>
                     <button onclick="closeModal()" class="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl transition-colors font-medium border border-slate-700 hover:border-slate-600">Close Project</button>
                 </div>
             </div>
@@ -364,13 +367,14 @@
         const projects = [
             {
                 id: 1,
-                title: "Web Application: Dashboard System",
-                category: "Web Development",
-                description: "ระบบ Dashboard สำหรับวิเคราะห์ยอดขาย แสดงผลข้อมูลแบบ Real-time visualization",
-                tech: ["Google App Script", "Google Sheets", "HTML/CSS", "JavaScript"],
-                detail: "พัฒนาเว็บไซต์โดยใช้ Google App Script เชื่อมต่อกับ Google Sheet เป็น Database ผสมผสาน HTML/CSS/JS เพื่อดึงข้อมูลมาแสดงผลในรูปแบบกราฟและตัวเลขที่สวยงาม ช่วยให้เจ้าของร้านวิเคราะห์ข้อมูลได้ง่ายขึ้น",
-                image: "https://i.postimg.cc/vmWTjSWJ/dashboard.png",
-                color: "from-blue-500 to-cyan-400"
+                title: "FloodCare+ (Disaster Relief System)",
+                category: "Web Application",
+                description: "ระบบรับแจ้งเหตุและช่วยเหลือผู้ประสบภัยน้ำท่วม รองรับ 3 สิทธิ์ผู้ใช้งาน (User, Agency, Admin)",
+                tech: ["HTML/CSS/JS", "Tailwind CSS", "Chart.js", "Google Apps Script"],
+                detail: "พัฒนาระบบ Web Application เต็มรูปแบบสำหรับจัดการสถานการณ์น้ำท่วม มีระบบสร้างฟอร์มแจ้งเหตุพร้อมแนบพิกัด GPS แผนที่จุดแจกของ ระบบคัดกรองและส่งต่อเคสให้หน่วยงานกู้ภัย พร้อม Dashboard สรุปสถิติแบบ Real-time ด้วย Chart.js โดยใช้ Google Sheets เป็นฐานข้อมูลเบื้องหลังผ่าน Google Apps Script",
+                image: "https://i.postimg.cc/2yvJQQGd/floods-(1).png",
+                color: "from-blue-600 to-indigo-600",
+                demoLink: "https://starnizslart.github.io/viberskru/"
             },
             {
                 id: 2,
@@ -380,10 +384,21 @@
                 tech: ["Google App Script", "Google Sheets", "HTML/CSS", "JavaScript"],
                 detail: "พัฒนาเว็บไซต์โดยใช้ Google App Script เชื่อมต่อกับ CSV เป็น Database ผสมผสาน HTML/CSS/JAVA",
                 image: "https://i.postimg.cc/2yqVVV07/Screenshot-2026-02-14-190712-(1).png",
-                color: "from-gray-700 to-slate-600"
+                color: "from-gray-700 to-slate-600",
+                demoLink: "https://starnizslart.github.io/dashboard/"
             },
             {
                 id: 3,
+                title: "Web Application: Dashboard System",
+                category: "Web Development",
+                description: "ระบบ Dashboard สำหรับวิเคราะห์ยอดขาย แสดงผลข้อมูลแบบ Real-time visualization",
+                tech: ["Google App Script", "Google Sheets", "HTML/CSS", "JavaScript"],
+                detail: "พัฒนาเว็บไซต์โดยใช้ Google App Script เชื่อมต่อกับ Google Sheet เป็น Database ผสมผสาน HTML/CSS/JS เพื่อดึงข้อมูลมาแสดงผลในรูปแบบกราฟและตัวเลขที่สวยงาม ช่วยให้เจ้าของร้านวิเคราะห์ข้อมูลได้ง่ายขึ้น",
+                image: "https://i.postimg.cc/vmWTjSWJ/dashboard.png",
+                color: "from-blue-500 to-cyan-400"
+            },
+            {
+                id: 4,
                 title: "AI-Powered Classroom Assistant",
                 category: "AI & Chatbot",
                 description: "ผู้ช่วยเสมือนจริงในชั้นเรียน ลดภาระการตอบคำถามซ้ำๆ ผ่าน LINE OA",
@@ -394,7 +409,7 @@
             },
 
             {
-                id: 4,
+                id: 5,
                 title: "IoT Smart Parking System",
                 category: "IoT / Hardware",
                 description: "ระบบลานจอดรถอัจฉริยะ ควบคุมไม้กั้นและไฟอัตโนมัติ",
@@ -404,7 +419,7 @@
                 color: "from-orange-500 to-red-400"
             },
             {
-                id: 5,
+                id: 6,
                 title: "Movie Finder App (MOVIETIME)",
                 category: "Mobile App",
                 description: "แอปฯ ค้นหาหนัง ดึงข้อมูล Real-time ผ่าน API",
@@ -414,7 +429,7 @@
                 color: "from-yellow-500 to-amber-400"
             },
             {
-                id: 6,
+                id: 7,
                 title: "Story Prompt (Rocket Drive)",
                 category: "Mobile App",
                 description: "แอปพลิเคชันเพื่อความบันเทิง สำหรับสุ่มหัวข้อเรื่องราว",
@@ -424,7 +439,7 @@
                 color: "from-indigo-500 to-violet-400"
             },
             {
-                id: 7,
+                id: 8,
                 title: "Football Team Management (eFHUB 25)",
                 category: "Simulation / Algorithm",
                 description: "แอปพลิเคชันจำลองสถานการณ์การบริหารทีมฟุตบอล เน้นการเขียน Algorithm",
@@ -523,6 +538,16 @@
             
             const techContainer = document.getElementById('modal-tech');
             techContainer.innerHTML = project.tech.map(t => `<span class="px-3 py-1.5 bg-slate-800 text-cyan-300 text-sm rounded-lg border border-slate-700 hover:border-cyan-500/50 transition-colors">${t}</span>`).join('');
+            
+            const demoLinkBtn = document.getElementById('modal-demo-link');
+            if (project.demoLink) {
+                demoLinkBtn.href = project.demoLink;
+                demoLinkBtn.classList.remove('hidden');
+                demoLinkBtn.classList.add('flex');
+            } else {
+                demoLinkBtn.classList.add('hidden');
+                demoLinkBtn.classList.remove('flex');
+            }
             
             modal.classList.remove('hidden');
             // Small delay to allow display:block to apply before opacity transition
