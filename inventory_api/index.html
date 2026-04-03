@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FuseIT - Ultimate Enterprise e-Commerce</title>
+    <!-- โหลด Bootstrap, Fonts, Icons, SweetAlert2 และ AOS Animation -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* ================= VARIABLES & BASE ================= */
+        :root { --primary: #0f172a; --secondary: #2563eb; --accent: #ef4444; --bg: #f8fafc; --glow: rgba(37, 99, 235, 0.5); }
+        body { font-family: 'Prompt', sans-serif; background-color: var(--bg); color: #1e293b; overflow-x: hidden; scroll-behavior: smooth; font-size: 0.95rem; }
+
+        /* ================= CUSTOM ANIMATIONS ================= */
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0px); } }
+        @keyframes pulseGlow { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+        @keyframes pulseGreen { 0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); } 70% { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); } 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); } }
+        @keyframes blinkCursor { from, to { border-color: transparent } 50% { border-color: white; } }
+
+        /* Typewriter Effect */
+        .typewriter-text { border-right: 3px solid white; animation: blinkCursor .75s step-end infinite; white-space: nowrap; overflow: hidden; font-weight: bold; color: #60a5fa; }
+
+        /* ================= NAVBAR ================= */
+        .glass-nav { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05); transition: 0.3s; box-shadow: 0 2px 20px rgba(0,0,0,0.04); padding: 10px 0 !important; }
+        .nav-link-custom { position: relative; color: var(--primary); font-weight: 500; margin: 0 12px; transition: 0.3s; text-decoration: none; padding: 5px 0; font-size: 0.95rem; }
+        .nav-link-custom::after { content: ''; position: absolute; width: 0; height: 3px; bottom: -2px; left: 0; background-color: var(--secondary); transition: width 0.3s ease; border-radius: 2px; }
+        .nav-link-custom:hover::after { width: 100%; }
+        .nav-link-custom:hover { color: var(--secondary); }
+
+        /* ================= HERO SECTION ================= */
+        .hero-banner {
+            background: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2000&auto=format&fit=crop') center/cover fixed;
+            border-radius: 24px; padding: 100px 40px; margin: 20px 0; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2); overflow: hidden;
+        }
+        .hero-banner::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(15,23,42,0.95) 0%, rgba(15,23,42,0.4) 100%); }
+        .hero-content { position: relative; z-index: 1; color: white; }
+
+        /* ================= CATEGORY BOX UI ================= */
+        .category-box { background: white; border-radius: 16px; padding: 20px 10px; text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.03); cursor: pointer; transition: 0.4s; border: 2px solid transparent; height: 100%; display: flex; flex-direction: column; justify-content: center; }
+        .category-box:hover, .category-box.active { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); border-color: var(--secondary); }
+        .category-box i { font-size: 2.2rem; display: block; margin-bottom: 12px; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .category-box:hover i, .category-box.active i { transform: scale(1.2); }
+        .category-box span { font-weight: 600; color: #1e293b; font-size: 0.95rem; }
+
+        /* ================= CARDS & UI ================= */
+        .store-card { background: white; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 8px 25px rgba(0,0,0,0.03); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); height: 100%; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+        .store-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(37, 99, 235, 0.1); border-color: rgba(37, 99, 235, 0.2); }
+        .card-img-wrapper { height: 210px; overflow: hidden; position: relative; background: #e2e8f0; cursor: zoom-in; }
+        .store-card-img { width: 100%; height: 100%; object-fit: cover; transition: 0.8s ease; }
+        .store-card:hover .store-card-img { transform: scale(1.1) rotate(1deg); filter: brightness(1.05); }
+        
+        .admin-actions { position: absolute; top: 12px; right: 12px; display: flex; flex-direction: column; gap: 8px; opacity: 0; transition: 0.4s; transform: translateX(20px); }
+        .store-card:hover .admin-actions { opacity: 1; transform: translateX(0); }
+        .btn-action { width: 40px; height: 40px; border-radius: 50%; border: none; background: rgba(255,255,255,0.95); backdrop-filter: blur(5px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: 0.3s; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+        .btn-action.edit:hover { background: var(--secondary); color: white; transform: scale(1.1); }
+        .btn-action.delete:hover { background: var(--accent); color: white; transform: scale(1.1); }
+        
+        .stock-badge { position: absolute; bottom: 12px; left: 12px; padding: 5px 14px; border-radius: 30px; font-size: 0.75rem; font-weight: 700; z-index: 2; backdrop-filter: blur(5px); transition: 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .stock-ok { background: rgba(16, 185, 129, 0.95); color: white; }
+        .stock-danger { background: rgba(239, 68, 68, 0.95); color: white; animation: pulseGlow 1.5s infinite; }
+
+        /* Buttons Hover Glow */
+        .btn-primary { background: var(--secondary); border: none; transition: 0.3s; position: relative; overflow: hidden; z-index: 1; font-size: 0.95rem; }
+        .btn-primary::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); transition: 0.5s; z-index: -1; }
+        .btn-primary:hover::before { left: 100%; }
+        .btn-primary:hover { box-shadow: 0 8px 15px var(--glow); transform: translateY(-2px); background: #1d4ed8; }
+
+        /* ================= AUTHENTICATION MODAL ================= */
+        .auth-container { background: #ffffff; border-radius: 24px; padding: 40px; border: none; box-shadow: 0 25px 50px rgba(0,0,0,0.15); }
+        .form-floating > label { color: #64748b; font-weight: 500; padding-left: 1.25rem; font-size: 1rem; }
+        .form-floating > .form-control { border-radius: 12px; border: 1.5px solid #e2e8f0; background-color: #f8fafc; padding-left: 1.25rem; font-size: 1rem; height: calc(3.5rem + 2px); }
+        .form-floating > .form-control:focus { background-color: #ffffff; border-color: var(--secondary); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
+        .eye-icon { cursor: pointer; color: #94a3b8; font-size: 1.3rem; transition: 0.3s; right: 15px; z-index: 10; padding: 10px; }
+        .eye-icon:hover { color: var(--secondary); transform: scale(1.1); }
+
+        /* ================= DASHBOARD & TABLES ================= */
+        .dashboard-stat-card { border-radius: 16px; border: none; padding: 20px; transition: 0.3s; background: white; box-shadow: 0 8px 15px rgba(0,0,0,0.03); }
+        .dashboard-stat-card:hover { transform: translateY(-4px); box-shadow: 0 12px 25px rgba(0,0,0,0.06); }
+        .table-custom { border-collapse: separate; border-spacing: 0 8px; font-size: 0.9rem; }
+        .table-custom tr { background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.02); transition: 0.3s; }
+        .table-custom tr:hover { transform: scale(1.01); box-shadow: 0 4px 12px rgba(0,0,0,0.05); z-index: 2; position: relative; }
+        .table-custom td { padding: 12px 15px; border: none; vertical-align: middle; }
+        .table-custom td:first-child { border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
+        .table-custom td:last-child { border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
+
+        /* ================= MEGA FOOTER ================= */
+        .mega-footer { background-color: #0f172a; color: #cbd5e1; padding: 60px 0 20px; margin-top: 60px; position: relative; overflow: hidden; font-size: 0.9rem; }
+        .footer-title { color: white; font-weight: 700; margin-bottom: 20px; font-size: 1.1rem; position: relative; padding-bottom: 8px; }
+        .footer-title::after { content: ''; position: absolute; left: 0; bottom: 0; width: 35px; height: 3px; background: var(--secondary); border-radius: 5px; }
+        .footer-link { color: #94a3b8; text-decoration: none; transition: 0.3s; display: block; margin-bottom: 10px; }
+        .footer-link:hover { color: white; transform: translateX(6px); }
+        .footer-social .btn { width: 36px; height: 36px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); color: white; margin-right: 8px; transition: 0.3s; border: none; font-size: 0.9rem; }
+        .footer-social .btn:hover { background: var(--secondary); transform: translateY(-4px); box-shadow: 0 8px 15px rgba(37,99,235,0.4); }
+        .payment-icons img { height: 30px; margin-right: 8px; margin-bottom: 8px; background: white; padding: 4px 8px; border-radius: 6px; object-fit: contain; }
+
+        /* ================= FLOATING BUTTONS & CHAT ================= */
+        .admin-fab { position: fixed; bottom: 110px; right: 30px; z-index: 999; width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #ef4444, #f97316); color: white; font-size: 20px; border: none; box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4); transition: 0.4s; display: flex; justify-content: center; align-items: center; }
+        .admin-fab:hover { transform: scale(1.1) rotate(90deg); }
+        
+        .chat-fab { position: fixed; bottom: 30px; right: 30px; z-index: 999; width: 58px; height: 58px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #0ea5e9); color: white; font-size: 26px; border: none; box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4); transition: 0.4s; animation: float 3s ease-in-out infinite; display: flex; justify-content: center; align-items: center; }
+        .chat-fab:hover { transform: scale(1.1); animation: none; }
+
+        .chat-widget { position: fixed; bottom: 100px; right: 30px; width: 330px; background: white; border-radius: 18px; box-shadow: 0 12px 35px rgba(0,0,0,0.15); z-index: 1000; overflow: hidden; transform: scale(0); opacity: 0; transform-origin: bottom right; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; }
+        .chat-widget.active { transform: scale(1); opacity: 1; }
+        .chat-header { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; }
+        .chat-header .status-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; display: inline-block; margin-right: 6px; animation: pulseGreen 2s infinite; }
+        .chat-body { height: 280px; overflow-y: auto; padding: 16px; background: #f8fafc; display: flex; flex-direction: column; gap: 12px; }
+        .chat-msg { max-width: 85%; padding: 10px 14px; border-radius: 16px; font-size: 0.85rem; animation: fadeUp 0.3s ease-out; box-shadow: 0 2px 8px rgba(0,0,0,0.03); line-height: 1.4; }
+        .chat-msg.admin { background: white; color: #1e293b; border-bottom-left-radius: 2px; align-self: flex-start; }
+        .chat-msg.user { background: var(--secondary); color: white; border-bottom-right-radius: 2px; align-self: flex-end; }
+        .chat-input-area { padding: 12px; background: white; border-top: 1px solid #e2e8f0; display: flex; gap: 8px; }
+        .chat-input { flex: 1; border: none; background: #f1f5f9; padding: 8px 14px; border-radius: 16px; outline: none; transition: 0.3s; font-size: 0.85rem; }
+        .chat-send-btn { background: var(--secondary); color: white; border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; justify-content: center; align-items: center; transition: 0.3s; font-size: 1rem; }
+        .typing-indicator { display: none; align-self: flex-start; background: white; padding: 10px 14px; border-radius: 16px; border-bottom-left-radius: 2px; }
+        .typing-indicator span { display: inline-block; width: 5px; height: 5px; background: #94a3b8; border-radius: 50%; margin: 0 2px; animation: typingBounce 1.2s infinite ease-in-out both; }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typingBounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); background: var(--secondary); } }
+
+        /* ================= MOBILE RESPONSIVE ================= */
+        @media (max-width: 768px) {
+            .hero-banner { padding: 60px 25px; border-radius: 16px; margin: 10px 0; }
+            .hero-banner h1 { font-size: 2.2rem; }
+            .hero-banner p { font-size: 0.95rem !important; }
+            
+            .category-box { padding: 15px 10px; }
+            .category-box i { font-size: 1.8rem; margin-bottom: 8px; }
+            .category-box span { font-size: 0.85rem; }
+            
+            .card-img-wrapper { height: 180px; }
+            
+            .chat-widget { width: calc(100vw - 40px); right: 20px; bottom: 90px; }
+            .chat-fab { right: 20px; bottom: 20px; width: 50px; height: 50px; font-size: 22px; }
+            .admin-fab { right: 20px; bottom: 85px; width: 45px; height: 45px; font-size: 18px; }
+            
+            .dashboard-stat-card { padding: 15px; }
+            .dashboard-stat-card h2 { font-size: 1.5rem; }
+            
+            .mega-footer { padding: 40px 0 15px; margin-top: 40px; }
+            .footer-title { margin-top: 15px; font-size: 1.05rem; }
+            
+            .auth-container { padding: 25px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+    <nav class="glass-nav">
+        <div class="container d-flex justify-content-between align-items-center">
+            <!-- Logo -->
+            <a href="#" class="text-decoration-none d-flex align-items-center" onclick="showPage('store'); return false;">
+                <div class="bg-dark text-white rounded-circle d-flex justify-content-center align-items-center me-2 shadow-sm" style="width: 42px; height: 42px; font-size: 1.2rem;"><i class="bi bi-rocket-takeoff-fill"></i></div>
+                <div>
+                    <h4 class="m-0 fw-bold text-dark" style="line-height: 1;">Fuse<span style="color: var(--secondary);">IT.</span></h4>
+                    <small class="text-muted fw-bold" style="font-size: 0.65rem; letter-spacing: 1px;">ENTERPRISE</small>
+                </div>
+            </a>
+
+            <!-- Center Navigation Links -->
+            <div class="d-none d-lg-flex align-items-center">
+                <a href="#" class="nav-link-custom" onclick="showPage('store'); return false;">หน้าแรก</a>
+                <a href="#" class="nav-link-custom" onclick="showPage('store'); setTimeout(() => document.getElementById('productSection').scrollIntoView(), 100); return false;">สินค้าทั้งหมด</a>
+                <a href="#" class="nav-link-custom text-danger fw-bold" onclick="showPage('store'); setTimeout(() => document.getElementById('productSection').scrollIntoView(), 100); return false;"><i class="bi bi-fire"></i> โปรโมชัน</a>
+                <a href="#" class="nav-link-custom" onclick="showPage('contact'); return false;">ติดต่อเรา</a>
+            </div>
+
+            <!-- User Actions -->
+            <div id="authSection" class="d-flex align-items-center gap-2"></div>
+        </div>
+    </nav>
+
+    <div class="container mb-5">
+        
+        <!-- ================= PAGE: STORE & DASHBOARD ================= -->
+        <div id="page-store" class="page-view">
+            <!-- Hero Banner & Typewriter -->
+            <div class="hero-banner" id="consumerHero" data-aos="zoom-in" data-aos-duration="1000">
+                <div class="hero-content">
+                    <span class="badge bg-primary px-3 py-2 rounded-pill mb-3 shadow-sm">Welcome to the Future</span>
+                    <h1 class="display-4 fw-bold mb-3">ยกระดับธุรกิจไอที<br>สู่อีกขั้นของ<span class="typewriter-text ms-2" id="typewriter"></span></h1>
+                    <p class="fs-5 opacity-75 mb-4" style="max-width: 550px;">ระบบจัดการคลังสินค้าและหน้าร้าน e-Commerce แบบ All-in-One ตอบโจทย์ทุกการใช้งานด้วย UX/UI ระดับโลก</p>
+                    <a href="#" onclick="document.getElementById('productSection').scrollIntoView(); return false;" class="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm"><i class="bi bi-cart3"></i> ช้อปเลยตอนนี้</a>
+                </div>
+            </div>
+
+            <!-- ส่วนของ Admin: แดชบอร์ดสรุปข้อมูล (ซ่อนถ้าไม่ใช่ Admin) -->
+            <div id="adminDashboard" class="d-none mb-4 mt-3" data-aos="fade-up" data-aos-delay="200">
+                <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                    <h4 class="fw-bold m-0 border-start border-4 border-secondary ps-2"><i class="bi bi-speedometer2 text-secondary"></i> ภาพรวมระบบ (Admin Dashboard)</h4>
+                    <div class="text-muted small fw-bold"><i class="bi bi-shield-check text-success"></i> ผู้ดูแลระบบ</div>
+                </div>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="dashboard-stat-card d-flex align-items-center gap-3" data-aos="flip-up" data-aos-delay="300">
+                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; font-size: 1.5rem;"><i class="bi bi-box-seam-fill"></i></div>
+                            <div><p class="text-muted mb-0 small fw-bold">สินค้าทั้งหมดในคลัง</p><h3 class="fw-bold m-0" id="dashTotalItems">0</h3></div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="dashboard-stat-card d-flex align-items-center gap-3" data-aos="flip-up" data-aos-delay="400">
+                            <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; font-size: 1.5rem;"><i class="bi bi-cash-stack"></i></div>
+                            <div><p class="text-muted mb-0 small fw-bold">มูลค่าคลังสินค้ารวม</p><h3 class="fw-bold m-0 text-success" id="dashTotalValue">฿0</h3></div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="dashboard-stat-card d-flex align-items-center gap-3" data-aos="flip-up" data-aos-delay="500">
+                            <div class="bg-danger bg-opacity-10 text-danger rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; font-size: 1.5rem;"><i class="bi bi-exclamation-triangle-fill"></i></div>
+                            <div><p class="text-muted mb-0 small fw-bold">สินค้าใกล้หมดสต็อก</p><h3 class="fw-bold m-0 text-danger" id="dashLowStock">0</h3></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-stat-card" data-aos="fade-up" data-aos-delay="600">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="fw-bold m-0"><i class="bi bi-cart-check-fill text-success"></i> รายการสั่งซื้อล่าสุดจากลูกค้า</h6>
+                        <button class="btn btn-sm btn-outline-secondary rounded-pill py-1" onclick="loadAdminOrders()"><i class="bi bi-arrow-clockwise"></i> โหลดใหม่</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-custom">
+                            <thead class="text-muted small">
+                                <tr><th>รหัสสั่งซื้อ</th><th>ลูกค้า (ID)</th><th>รายการสินค้า</th><th>ยอดชำระ</th><th>สถานะ</th><th>เวลาสั่งซื้อ</th></tr>
+                            </thead>
+                            <tbody id="adminOrderList">
+                                <tr><td colspan="6" class="text-center text-muted py-3">กำลังโหลดข้อมูล...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categories Quick Link -->
+            <div class="row g-2 mb-4 mt-3" data-aos="fade-up">
+                <div class="col-6 col-md-3">
+                    <div class="category-box" onclick="filterCategory('คอมพิวเตอร์ประกอบ', this)">
+                        <i class="bi bi-pc-display text-primary"></i>
+                        <span>คอมพิวเตอร์ประกอบ</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="category-box" onclick="filterCategory('โน๊ตบุ๊ค & แท็บเล็ต', this)">
+                        <i class="bi bi-laptop text-success"></i>
+                        <span>โน๊ตบุ๊ค & แท็บเล็ต</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="category-box" onclick="filterCategory('เกมมิ่งเกียร์', this)">
+                        <i class="bi bi-headset text-danger"></i>
+                        <span>เกมมิ่งเกียร์</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="category-box active" onclick="filterCategory('', this)">
+                        <i class="bi bi-grid-fill text-warning"></i>
+                        <span>สินค้าทั้งหมด</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ส่วนของ Product Grid (หน้าร้าน) -->
+            <div id="productSection" class="d-flex flex-wrap justify-content-between align-items-end mb-3 mt-4 border-bottom pb-2 gap-2" data-aos="fade-right">
+                <h4 class="fw-bold m-0 border-start border-4 border-primary ps-2"><i class="bi bi-shop-window text-primary"></i> เลือกชมคอลเลกชันสินค้า</h4>
+                <div class="input-group shadow-sm rounded-pill overflow-hidden" style="max-width: 300px;">
+                    <span class="input-group-text bg-white border-0 py-1"><i class="bi bi-search text-muted small"></i></span>
+                    <input type="text" id="searchInput" class="form-control border-0 bg-white py-1 fs-6" placeholder="พิมพ์ชื่อสินค้าเพื่อค้นหา..." onkeyup="searchProducts()">
+                </div>
+            </div>
+
+            <div class="row g-3" id="productGrid">
+                <!-- ข้อมูลสินค้าจะโหลดตรงนี้พร้อม AOS Animate -->
+            </div>
+        </div>
+
+        <!-- ================= PAGE: ORDERS (ประวัติลูกค้า) ================= -->
+        <div id="page-orders" class="page-view d-none mt-4">
+            <h4 class="fw-bold mb-3 border-start border-4 border-secondary ps-2" data-aos="fade-right"><i class="bi bi-box2-heart text-secondary"></i> ประวัติการสั่งซื้อของฉัน</h4>
+            <div id="orderList" class="row g-3"></div>
+        </div>
+
+        <!-- ================= PAGE: CONTACT (หน้าติดต่อเรา) ================= -->
+        <div id="page-contact" class="page-view d-none mt-4 mb-4">
+            <div class="row g-4">
+                <div class="col-lg-5" data-aos="fade-right">
+                    <h3 class="fw-bold mb-3 border-start border-4 border-primary ps-2">ติดต่อ Fuse<span class="text-secondary">IT.</span></h3>
+                    <p class="text-muted mb-4 fs-6">มีข้อสงสัยหรือต้องการสอบถามข้อมูลเพิ่มเติม? ทีมงานของเราพร้อมให้บริการคุณตลอด 24 ชั่วโมง</p>
+                    
+                    <div class="d-flex align-items-center mb-3 p-3 bg-white rounded-4 shadow-sm transition" style="cursor: default;">
+                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 45px; height: 45px; font-size: 1.2rem;"><i class="bi bi-geo-alt-fill"></i></div>
+                        <div><h6 class="fw-bold m-0 fs-6">ที่ตั้งสำนักงาน</h6><p class="text-muted m-0 small">123 ถนนเทคโนโลยี แขวงนวัตกรรม เขตดิจิทัล กรุงเทพฯ 10000</p></div>
+                    </div>
+                    
+                    <div class="d-flex align-items-center mb-3 p-3 bg-white rounded-4 shadow-sm transition" style="cursor: default;">
+                        <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 45px; height: 45px; font-size: 1.2rem;"><i class="bi bi-telephone-fill"></i></div>
+                        <div><h6 class="fw-bold m-0 fs-6">เบอร์โทรศัพท์</h6><p class="text-muted m-0 small">02-XXX-XXXX, 089-XXX-XXXX</p></div>
+                    </div>
+
+                    <div class="d-flex align-items-center mb-3 p-3 bg-white rounded-4 shadow-sm transition" style="cursor: default;">
+                        <div class="bg-danger bg-opacity-10 text-danger rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 45px; height: 45px; font-size: 1.2rem;"><i class="bi bi-envelope-fill"></i></div>
+                        <div><h6 class="fw-bold m-0 fs-6">อีเมล</h6><p class="text-muted m-0 small">support@fuseit.com</p></div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-7" data-aos="fade-left" data-aos-delay="200">
+                    <div class="bg-white p-4 rounded-4 shadow-sm border border-light">
+                        <h5 class="fw-bold mb-3"><i class="bi bi-send-fill text-primary me-2"></i>ส่งข้อความหาเรา</h5>
+                        <form onsubmit="event.preventDefault(); Swal.fire('ส่งข้อความสำเร็จ', 'ทีมงานจะติดต่อกลับโดยเร็วที่สุด ขอบคุณครับ', 'success'); this.reset();">
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold small text-muted mb-1">ชื่อ-นามสกุล</label>
+                                    <input type="text" class="form-control bg-light border-0 py-2" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold small text-muted mb-1">อีเมล</label>
+                                    <input type="email" class="form-control bg-light border-0 py-2" required>
+                                </div>
+                                <div class="col-12 mt-2">
+                                    <label class="form-label fw-bold small text-muted mb-1">หัวข้อ</label>
+                                    <input type="text" class="form-control bg-light border-0 py-2" required>
+                                </div>
+                                <div class="col-12 mt-2">
+                                    <label class="form-label fw-bold small text-muted mb-1">รายละเอียด</label>
+                                    <textarea class="form-control bg-light border-0 py-2" rows="3" required></textarea>
+                                </div>
+                                <div class="col-12 mt-3">
+                                    <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 fw-bold shadow-sm">ยืนยันส่งข้อความ</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ================= MEGA FOOTER (FULL SYSTEM) ================= -->
+    <footer class="mega-footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-white text-dark rounded-circle d-flex justify-content-center align-items-center me-2" style="width: 35px; height: 35px; font-size: 1rem;"><i class="bi bi-rocket-takeoff-fill"></i></div>
+                        <h5 class="m-0 fw-bold text-white">Fuse<span style="color: var(--secondary);">IT.</span></h5>
+                    </div>
+                    <p class="text-light opacity-75 mb-3 small" style="line-height: 1.6;">ผู้นำด้านการจัดจำหน่ายอุปกรณ์ไอที คอมพิวเตอร์ โน๊ตบุ๊ค และเกมมิ่งเกียร์ ครบวงจรที่สุดในประเทศไทย พร้อมบริการหลังการขายระดับพรีเมียมและระบบจัดส่งที่รวดเร็วทันใจ 24 ชั่วโมง.</p>
+                    <div class="footer-social">
+                        <a href="#" class="btn"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="btn"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="btn"><i class="bi bi-line"></i></a>
+                        <a href="#" class="btn"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="footer-title">เกี่ยวกับเรา</h6>
+                    <a href="#" class="footer-link small" onclick="showPage('contact'); return false;">ติดต่อเรา</a>
+                    <a href="#" class="footer-link small">ค้นหาสาขาใกล้คุณ</a>
+                    <a href="#" class="footer-link small">ข่าวสารและโปรโมชัน</a>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="footer-title">บริการลูกค้า</h6>
+                    <a href="#" class="footer-link small">ขั้นตอนการสั่งซื้อแบบง่ายๆ</a>
+                    <a href="#" class="footer-link small">นโยบายการจัดส่งสินค้า</a>
+                    <a href="#" class="footer-link small">นโยบายความเป็นส่วนตัว (Privacy Policy)</a>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="footer-title">ช่องทางการชำระเงิน</h6>
+                    <div class="payment-icons mb-3">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1200px-Mastercard-logo.svg.png" alt="Mastercard">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png" alt="Visa">
+                    </div>
+                    <h6 class="footer-title mt-3">ผู้ให้บริการจัดส่ง</h6>
+                    <div class="payment-icons mt-2">
+                        <span class="badge bg-warning text-danger px-2 py-1 fs-6 shadow-sm"><i class="bi bi-box-seam"></i> KERRY</span>
+                        <span class="badge bg-danger text-white px-2 py-1 fs-6 shadow-sm ms-1"><i class="bi bi-truck"></i> J&T</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row border-top border-secondary mt-4 pt-3">
+                <div class="col-12 text-center text-md-start">
+                    <p class="text-muted small m-0">&copy; 2026 FuseIT Public Company Limited. All Rights Reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ================= FLOATING BUTTONS & CHAT WIDGET ================= -->
+    
+    <!-- ปุ่มเพิ่มสินค้า (แสดงเฉพาะ Admin) -->
+    <button id="adminFab" class="admin-fab d-none" onclick="openProductModal()" title="เพิ่มสินค้าใหม่"><i class="bi bi-plus-lg"></i></button>
+
+    <!-- ปุ่ม Live Chat ลอยๆ (User) -->
+    <button class="chat-fab" onclick="toggleChat()" title="ติดต่อพนักงาน"><i class="bi bi-chat-dots-fill"></i></button>
+
+    <!-- ระบบจำลองแชท (Simulated Chat) -->
+    <div class="chat-widget" id="chatWidget">
+        <div class="chat-header" id="chatHeaderBg" style="background: linear-gradient(135deg, #1e293b, #334155);">
+            <div class="d-flex align-items-center">
+                <div class="position-relative me-2">
+                    <img src="https://ui-avatars.com/api/?name=Support&background=fff&color=2563eb&rounded=true" width="34" class="shadow-sm" id="chatHeaderImg">
+                </div>
+                <div>
+                    <h6 class="m-0 fw-bold fs-6" id="chatHeaderName">Support Admin</h6>
+                    <small class="m-0 text-light opacity-75" style="font-size: 0.7rem;" id="chatHeaderStatus"><span class="status-dot"></span>แอดมินออนไลน์</small>
+                </div>
+            </div>
+            <button class="btn-close btn-close-white shadow-none" onclick="toggleChat()"></button>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="text-center small text-muted my-1" id="chatContextText">แชทจำลอง (Simulated Chat)</div>
+            <div class="chat-msg admin mb-2" id="chatWelcomeMsg">
+                สวัสดีครับ! 🚀 ยินดีต้อนรับสู่ร้าน FuseIT ขอบคุณที่สนใจสินค้าของเรา มีอะไรให้แอดมินช่วยเหลือไหมครับ?
+            </div>
+            
+            <div class="typing-indicator" id="typingIndicator">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <form class="chat-input-area" onsubmit="sendChatMessage(event)">
+            <input type="text" id="chatInput" class="chat-input" placeholder="พิมพ์ข้อความที่นี่..." autocomplete="off">
+            <button type="submit" class="chat-send-btn"><i class="bi bi-send-fill"></i></button>
+        </form>
+    </div>
+
+
+    <!-- ================= MODALS (Auth & Product) ================= -->
+    <div class="modal fade" id="authModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content auth-container border-0">
+                <div class="modal-header border-0 p-0 mb-4 d-flex justify-content-between align-items-start">
+                    <div>
+                        <h3 class="fw-bold m-0 text-primary" id="authTitle">ยินดีต้อนรับ</h3>
+                        <p class="text-muted small m-0 mt-1" id="authSubtitle">กรุณาเข้าสู่ระบบ</p>
+                    </div>
+                    <button type="button" class="btn-close shadow-none fs-5" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <form id="authForm">
+                        <input type="hidden" id="authMode" value="login">
+                        
+                        <div class="form-floating mb-3 d-none slide-up" id="fullnameGroup">
+                            <input type="text" class="form-control fw-bold" id="regFullname" placeholder="ชื่อ-นามสกุล">
+                            <label><i class="bi bi-person-vcard text-secondary"></i> ชื่อ-นามสกุล</label>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control fw-bold" id="authUsername" placeholder="Username" required>
+                            <label><i class="bi bi-person text-secondary"></i> ชื่อผู้ใช้งาน (Username)</label>
+                        </div>
+                        
+                        <div class="position-relative mb-3">
+                            <div class="form-floating">
+                                <input type="password" class="form-control fw-bold pe-5" id="authPassword" placeholder="Password" required>
+                                <label><i class="bi bi-shield-lock text-secondary"></i> รหัสผ่าน (Password)</label>
+                            </div>
+                            <i class="bi bi-eye eye-icon position-absolute top-50 translate-middle-y" onclick="togglePassword('authPassword', this)"></i>
+                        </div>
+
+                        <div class="position-relative mb-4 d-none slide-up" id="confirmPasswordGroup">
+                            <div class="form-floating">
+                                <input type="password" class="form-control fw-bold pe-5" id="authConfirmPassword" placeholder="Confirm Password">
+                                <label><i class="bi bi-shield-check text-secondary"></i> ยืนยันรหัสผ่าน</label>
+                            </div>
+                            <i class="bi bi-eye eye-icon position-absolute top-50 translate-middle-y" onclick="togglePassword('authConfirmPassword', this)"></i>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-3 rounded-pill fw-bold fs-5 mb-3 shadow-sm transition" id="authSubmitBtn">เข้าสู่ระบบ</button>
+                    </form>
+                    <div class="text-center mt-3 p-3 bg-light rounded-4 border">
+                        <p class="text-muted m-0" style="font-size: 0.95rem;" id="authSwitchText">ยังไม่มีบัญชีใช่หรือไม่? <br><a href="#" class="text-primary fw-bold text-decoration-none mt-1 fs-6 d-inline-block" onclick="toggleAuthMode()">สมัครสมาชิกใหม่ที่นี่ ฟรี!</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="productModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
+            <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 15px 30px rgba(0,0,0,0.15);">
+                <div class="modal-header border-0 pb-0 pt-3 px-3">
+                    <h5 class="modal-title fw-bold text-primary" id="modalTitle">ฟอร์มจัดการสินค้า</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-3">
+                    <form id="productForm">
+                        <input type="hidden" id="productId">
+                        <input type="hidden" id="currentImagePath">
+                        
+                        <div class="mb-3 text-center">
+                            <label for="productImage" style="cursor: pointer; width: 100%;">
+                                <img id="imagePreview" src="" class="rounded-4 shadow-sm mx-auto" style="width: 150px; height: 150px; object-fit: cover; border: 3px solid white; display: none;">
+                                <div id="uploadBox" class="p-3 border rounded-4 bg-light mx-auto transition" style="width: 150px; height: 150px; display: flex; flex-direction: column; justify-content: center; border: 2px dashed #94a3b8 !important;">
+                                    <i class="bi bi-image-fill fs-2 text-primary mb-1"></i>
+                                    <span class="fw-bold text-muted small">อัปโหลดรูปภาพ</span>
+                                </div>
+                            </label>
+                            <input type="file" class="d-none" id="productImage" accept="image/*" onchange="previewImage(event)">
+                        </div>
+                        
+                        <div class="mb-2">
+                            <label class="form-label text-muted small fw-bold mb-1">ชื่อสินค้า</label>
+                            <input type="text" class="form-control bg-light border-0 fw-bold" id="productName" required>
+                        </div>
+                        
+                        <div class="mb-2">
+                            <label class="form-label text-muted small fw-bold mb-1">หมวดหมู่สินค้า</label>
+                            <select class="form-select bg-light border-0 fw-bold" id="productCategory" required>
+                                <option value="คอมพิวเตอร์ประกอบ">คอมพิวเตอร์ประกอบ</option>
+                                <option value="โน๊ตบุ๊ค & แท็บเล็ต">โน๊ตบุ๊ค & แท็บเล็ต</option>
+                                <option value="เกมมิ่งเกียร์">เกมมิ่งเกียร์</option>
+                                <option value="อื่นๆ">อื่นๆ</option>
+                            </select>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6 mb-2">
+                                <label class="form-label text-muted small fw-bold mb-1">ราคาขาย (฿)</label>
+                                <input type="number" class="form-control bg-light border-0 text-primary fw-bold" id="productPrice" step="0.01" required>
+                            </div>
+                            <div class="col-6 mb-2">
+                                <label class="form-label text-muted small fw-bold mb-1">สต็อก (ชิ้น)</label>
+                                <input type="number" class="form-control bg-light border-0 text-success fw-bold" id="productStock" required>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer border-0 pb-3 px-3">
+                    <button type="button" class="btn btn-light rounded-pill px-3 py-1 fw-bold small" data-bs-dismiss="modal">ยกเลิก</button>
+                    <button type="button" class="btn btn-primary rounded-pill px-4 py-1 fw-bold shadow-sm small" onclick="saveProduct()"><i class="bi bi-save"></i> บันทึกข้อมูล</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= CORE LOGIC (JAVASCRIPT) ================= -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        const apiUrl = '.';
+        let authModal, productModal;
+        let currentUser = null;
+        let currentFilterCategory = '';
+
+        // --- Typewriter Effect Logic ---
+        const typeWords = ["ความสมบูรณ์แบบ", "เทคโนโลยีสุดล้ำ", "สุดยอดไอเทมเกมมิ่ง"];
+        let typeIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function typeWriter() {
+            const textElement = document.getElementById("typewriter");
+            if(!textElement) return;
+            const currentWord = typeWords[typeIndex];
+            
+            if (isDeleting) {
+                textElement.innerText = currentWord.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                textElement.innerText = currentWord.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 50 : 100;
+
+            if (!isDeleting && charIndex === currentWord.length) {
+                typeSpeed = 2000;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                typeIndex = (typeIndex + 1) % typeWords.length;
+                typeSpeed = 500;
+            }
+            setTimeout(typeWriter, typeSpeed);
+        }
+
+        // --- Init Function ---
+        document.addEventListener('DOMContentLoaded', () => {
+            AOS.init({ once: true, offset: 50, duration: 600 });
+            typeWriter();
+
+            authModal = new bootstrap.Modal(document.getElementById('authModal'));
+            productModal = new bootstrap.Modal(document.getElementById('productModal'));
+            
+            try {
+                const stored = localStorage.getItem('fuseUser');
+                if(stored) currentUser = JSON.parse(stored);
+            } catch(e) { localStorage.removeItem('fuseUser'); }
+
+            updateUIPerRole();
+            loadProducts();
+            document.getElementById('authForm').addEventListener('submit', handleAuth);
+        });
+
+        // ---------------- CHAT WIDGET LOGIC ----------------
+        function toggleChat() {
+            document.getElementById('chatWidget').classList.toggle('active');
+        }
+
+        function sendChatMessage(e) {
+            e.preventDefault();
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if(!message) return;
+
+            const chatBody = document.getElementById('chatBody');
+            const typingIndicator = document.getElementById('typingIndicator');
+            const isAdmin = currentUser?.role === 'admin';
+
+            // 1. นำข้อความที่เราพิมพ์ ไปไว้ฝั่งขวาเสมอ
+            const myMsg = document.createElement('div');
+            myMsg.className = 'chat-msg user mb-2';
+            myMsg.textContent = message;
+            chatBody.insertBefore(myMsg, typingIndicator);
+            input.value = '';
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            // 2. แสดงสถานะกำลังพิมพ์ของอีกฝ่าย
+            typingIndicator.style.display = 'block';
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            // 3. จำลองการตอบกลับจากอีกฝ่าย
+            setTimeout(() => {
+                typingIndicator.style.display = 'none';
+                const replyMsg = document.createElement('div');
+                replyMsg.className = 'chat-msg admin mb-2';
+                
+                let autoReplies = [];
+                if (isAdmin) {
+                    autoReplies = ["ขอบคุณมากครับแอดมิน 📦", "เดี๋ยวผมทำรายการโอนเงินเลยนะครับ 💳", "สุดยอดเลยครับ บริการดีมาก ✨", "โอเคครับตกลงตามนี้ครับ"];
+                } else {
+                    autoReplies = ["รับทราบครับ เดี๋ยวแอดมินประสานงานให้นะครับ 💻", "ตอนนี้ลดสูงสุด 30% สนใจตัวไหนสอบถามได้เลยครับ ✨", "ตรวจสอบสถานะพัสดุได้ที่เมนู 'พัสดุของฉัน' มุมขวาบนได้เลยครับ 📦", "ขอบคุณที่ไว้วางใจ FuseIT ครับ 🚀"];
+                }
+                
+                replyMsg.textContent = autoReplies[Math.floor(Math.random() * autoReplies.length)];
+                chatBody.insertBefore(replyMsg, typingIndicator);
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }, 1500);
+        }
+
+        // ---------------- AUTHENTICATION ----------------
+        function openAuth() {
+            document.getElementById('authForm').reset();
+            document.querySelectorAll('.eye-icon').forEach(icon => { icon.classList.replace('bi-eye-slash', 'bi-eye'); });
+            document.getElementById('authPassword').type = "password";
+            document.getElementById('authConfirmPassword').type = "password";
+            authModal.show();
+        }
+
+        function togglePassword(inputId, iconElement) {
+            const input = document.getElementById(inputId);
+            if (input.type === "password") {
+                input.type = "text";
+                iconElement.classList.replace('bi-eye', 'bi-eye-slash');
+            } else {
+                input.type = "password";
+                iconElement.classList.replace('bi-eye-slash', 'bi-eye');
+            }
+        }
+
+        function toggleAuthMode() {
+            const modeInput = document.getElementById('authMode');
+            const fullnameGroup = document.getElementById('fullnameGroup');
+            const confirmGroup = document.getElementById('confirmPasswordGroup');
+            const title = document.getElementById('authTitle');
+            const subtitle = document.getElementById('authSubtitle');
+            const btn = document.getElementById('authSubmitBtn');
+            const switchText = document.getElementById('authSwitchText');
+
+            if(modeInput.value === 'login') {
+                modeInput.value = 'register';
+                fullnameGroup.classList.remove('d-none');
+                confirmGroup.classList.remove('d-none');
+                document.getElementById('regFullname').required = true;
+                document.getElementById('authConfirmPassword').required = true;
+                title.innerText = 'สมัครสมาชิกใหม่';
+                subtitle.innerText = 'เริ่มสร้างบัญชีฟรีได้เลย';
+                btn.innerHTML = '<i class="bi bi-person-plus-fill"></i> ยืนยันการสมัคร';
+                btn.classList.replace('btn-primary', 'btn-success');
+                switchText.innerHTML = 'มีบัญชีอยู่แล้ว? <a href="#" class="text-primary fw-bold text-decoration-none" onclick="toggleAuthMode()">เข้าสู่ระบบ</a>';
+            } else {
+                modeInput.value = 'login';
+                fullnameGroup.classList.add('d-none');
+                confirmGroup.classList.add('d-none');
+                document.getElementById('regFullname').required = false;
+                document.getElementById('authConfirmPassword').required = false;
+                title.innerText = 'ยินดีต้อนรับ';
+                subtitle.innerText = 'กรุณาเข้าสู่ระบบ';
+                btn.innerHTML = 'เข้าสู่ระบบ';
+                btn.classList.replace('btn-success', 'btn-primary');
+                switchText.innerHTML = 'ยังไม่มีบัญชีใช่หรือไม่? <br><a href="#" class="text-primary fw-bold text-decoration-none mt-1 d-inline-block" onclick="toggleAuthMode()">สมัครสมาชิกใหม่ที่นี่ ฟรี!</a>';
+            }
+        }
+
+        function handleAuth(e) {
+            e.preventDefault();
+            const action = document.getElementById('authMode').value;
+            const fullname = document.getElementById('regFullname').value;
+            const username = document.getElementById('authUsername').value;
+            const password = document.getElementById('authPassword').value;
+            const confirmPass = document.getElementById('authConfirmPassword').value;
+
+            if (action === 'register' && password !== confirmPass) {
+                return Swal.fire('ข้อมูลไม่ถูกต้อง', 'รหัสผ่าน และ ยืนยันรหัสผ่าน ไม่ตรงกัน!', 'warning');
+            }
+
+            Swal.fire({ title: 'กำลังตรวจสอบ...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+            fetch(`${apiUrl}/auth.php`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action, fullname, username, password })
+            })
+            .then(res => res.json().then(data => ({ status: res.status, body: data })))
+            .then(result => {
+                if(result.status === 200) { 
+                    currentUser = result.body.user;
+                    localStorage.setItem('fuseUser', JSON.stringify(currentUser));
+                    authModal.hide();
+                    Swal.fire({icon: 'success', title: 'สำเร็จ', text: `ยินดีต้อนรับ ${currentUser.fullname}`, timer: 1500, showConfirmButton: false});
+                    updateUIPerRole();
+                    loadProducts();
+                } else if(result.status === 201) { 
+                    Swal.fire({icon: 'success', title: 'สุดยอดเลย!', text: result.body.message}).then(() => {
+                        toggleAuthMode();
+                        document.getElementById('authPassword').value = '';
+                        document.getElementById('authConfirmPassword').value = '';
+                    });
+                } else {
+                    Swal.fire('ข้อผิดพลาด', result.body.message, 'error');
+                }
+            })
+            .catch(err => Swal.fire('เกิดข้อผิดพลาด', 'เชื่อมต่อระบบไม่ได้', 'error'));
+        }
+
+        function logout() {
+            Swal.fire({ title: 'กำลังออกจากระบบ...', timer: 800, didOpen: () => Swal.showLoading() }).then(() => {
+                currentUser = null;
+                localStorage.removeItem('fuseUser');
+                showPage('store');
+                updateUIPerRole();
+                loadProducts();
+            });
+        }
+
+        function updateUIPerRole() {
+            const authSec = document.getElementById('authSection');
+            const adminDash = document.getElementById('adminDashboard');
+            const adminFab = document.getElementById('adminFab');
+            const consumerHero = document.getElementById('consumerHero');
+
+            const resetChatToUser = () => {
+                const headerBg = document.getElementById('chatHeaderBg');
+                if(headerBg) headerBg.style.background = 'linear-gradient(135deg, #1e293b, #334155)';
+                const headerImg = document.getElementById('chatHeaderImg');
+                if(headerImg) headerImg.src = 'https://ui-avatars.com/api/?name=Support&background=fff&color=2563eb&rounded=true';
+                const headerName = document.getElementById('chatHeaderName');
+                if(headerName) headerName.innerText = "Support Admin";
+                const headerStatus = document.getElementById('chatHeaderStatus');
+                if(headerStatus) headerStatus.innerHTML = '<span class="status-dot"></span>แอดมินออนไลน์';
+                const contextText = document.getElementById('chatContextText');
+                if(contextText) contextText.innerText = "แชทจำลอง (Simulated Chat)";
+                const welcomeMsg = document.getElementById('chatWelcomeMsg');
+                if(welcomeMsg) {
+                    welcomeMsg.className = 'chat-msg admin mb-2';
+                    welcomeMsg.innerText = "สวัสดีครับ! 🚀 ยินดีต้อนรับสู่ร้าน FuseIT ขอบคุณที่สนใจสินค้าของเรา มีอะไรให้แอดมินช่วยเหลือไหมครับ?";
+                }
+                const chatInput = document.getElementById('chatInput');
+                if(chatInput) chatInput.placeholder = "พิมพ์ข้อความที่นี่...";
+            };
+
+            if (!currentUser) {
+                authSec.innerHTML = `<button class="btn btn-primary rounded-pill px-3 py-1 fw-bold shadow-sm" onclick="openAuth()">เข้าสู่ระบบ</button>`;
+                adminDash.classList.add('d-none');
+                adminFab.classList.add('d-none');
+                if(consumerHero) consumerHero.classList.remove('d-none');
+                resetChatToUser();
+            } else {
+                let menuBtn = '';
+                if(currentUser.role === 'admin') {
+                    adminDash.classList.remove('d-none');
+                    adminFab.classList.remove('d-none');
+                    if(consumerHero) consumerHero.classList.add('d-none');
+                    loadAdminOrders();
+                    menuBtn = `<span class="badge bg-danger rounded-pill py-2 px-3 shadow"><i class="bi bi-shield-check"></i> Admin</span>`;
+                    
+                    const headerBg = document.getElementById('chatHeaderBg');
+                    if(headerBg) headerBg.style.background = 'linear-gradient(135deg, #ef4444, #f97316)';
+                    const headerImg = document.getElementById('chatHeaderImg');
+                    if(headerImg) headerImg.src = 'https://ui-avatars.com/api/?name=Customer&background=fff&color=ef4444&rounded=true';
+                    const headerName = document.getElementById('chatHeaderName');
+                    if(headerName) headerName.innerText = "กล่องข้อความลูกค้า (1)";
+                    const headerStatus = document.getElementById('chatHeaderStatus');
+                    if(headerStatus) headerStatus.innerHTML = '<span class="status-dot bg-warning" style="animation:none;"></span> ลูกค้ารอการตอบกลับ';
+                    const contextText = document.getElementById('chatContextText');
+                    if(contextText) contextText.innerText = "ระบบจัดการข้อความ (Admin)";
+                    const welcomeMsg = document.getElementById('chatWelcomeMsg');
+                    if(welcomeMsg) {
+                        welcomeMsg.className = 'chat-msg user mb-2';
+                        welcomeMsg.innerText = "สอบถามครับ สินค้าตัวนี้มีของพร้อมส่งไหมครับ?";
+                    }
+                    const chatInput = document.getElementById('chatInput');
+                    if(chatInput) chatInput.placeholder = "ตอบกลับลูกค้า...";
+
+                } else {
+                    adminDash.classList.add('d-none');
+                    adminFab.classList.add('d-none');
+                    if(consumerHero) consumerHero.classList.remove('d-none');
+                    menuBtn = `<button class="btn btn-outline-primary rounded-pill fw-bold bg-white px-3 py-1" onclick="showPage('orders'); loadMyOrders();"><i class="bi bi-box-seam-fill"></i> พัสดุของฉัน</button>`;
+                    resetChatToUser();
+                }
+
+                authSec.innerHTML = `
+                    ${menuBtn}
+                    <div class="dropdown">
+                        <button class="btn btn-light rounded-pill px-3 py-1 fw-bold dropdown-toggle shadow-sm d-flex align-items-center" type="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle text-primary fs-5 me-2"></i> <span class="d-none d-md-block">${currentUser.fullname}</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-2 rounded-4 p-2">
+                            <li class="px-3 py-2 text-muted small fw-bold text-center border-bottom mb-2">จัดการบัญชี</li>
+                            <li><a class="dropdown-item text-danger fw-bold py-2 rounded-3 text-center" href="#" onclick="logout()"><i class="bi bi-box-arrow-right"></i> ออกจากระบบ</a></li>
+                        </ul>
+                    </div>
+                `;
+            }
+        }
+
+        function showPage(page) {
+            document.querySelectorAll('.page-view').forEach(p => p.classList.add('d-none'));
+            const target = document.getElementById(`page-${page}`);
+            target.classList.remove('d-none');
+            target.classList.add('fade-up');
+            setTimeout(() => AOS.refresh(), 100);
+            window.scrollTo(0,0);
+        }
+
+        // ---------------- PRODUCTS SYSTEM ----------------
+        function loadProducts() {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = '<div class="col-12 text-center py-5"><div class="spinner-grow text-primary"></div><p class="text-muted mt-2 fw-bold">กำลังประมวลผลข้อมูล...</p></div>';
+
+            fetch(`${apiUrl}/get_products.php`)
+                .then(res => res.json())
+                .then(data => {
+                    grid.innerHTML = '';
+                    let totalVal = 0, count = 0, lowCount = 0;
+
+                    if (data.data && data.data.length > 0) {
+                        count = data.data.length;
+                        data.data.forEach((p, index) => {
+                            const price = parseFloat(p.price || 0);
+                            const stock = parseInt(p.stock || 0);
+                            const rawName = p.name || 'ไม่มีชื่อสินค้า';
+                            const category = p.category || 'อื่นๆ'; 
+                            
+                            totalVal += (price * stock);
+                            if(stock < 5) lowCount++;
+
+                            const imgSrc = p.image ? `${apiUrl}/${p.image}` : 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=500';
+                            
+                            // ใช้ Data Attributes ล้างบั๊กสัญลักษณ์พัง 100% (Quotes Bug Fix)
+                            const safeTitle = rawName.replace(/"/g, '&quot;');
+                            const safeImage = p.image || '';
+                            
+                            const isLowStock = stock < 5;
+                            const badgeClass = isLowStock ? 'stock-danger' : 'stock-ok';
+                            const badgeText = isLowStock ? `<i class="bi bi-exclamation-octagon-fill"></i> ใกล้หมด (${stock})` : `<i class="bi bi-check-circle-fill"></i> พร้อมส่ง (${stock})`;
+                            
+                            let adminUI = '';
+                            if(currentUser?.role === 'admin') {
+                                adminUI = `
+                                    <div class="admin-actions">
+                                        <button class="btn-action edit" 
+                                            data-id="${p.id}" data-name="${safeTitle}" data-category="${category.replace(/"/g, '&quot;')}" 
+                                            data-price="${price}" data-stock="${stock}" data-image="${safeImage}" 
+                                            onclick="event.stopPropagation(); editProduct(this)">
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </button>
+                                        <button class="btn-action delete" onclick="event.stopPropagation(); deleteProduct(${p.id})">
+                                            <i class="bi bi-trash3-fill"></i>
+                                        </button>
+                                    </div>`;
+                            }
+
+                            let buyUI = '';
+                            if(currentUser?.role === 'user') {
+                                buyUI = (isLowStock && stock == 0) ? 
+                                    `<button class="btn btn-secondary w-100 mt-auto rounded-pill fw-bold py-2" disabled>สินค้าหมด</button>` :
+                                    `<button class="btn btn-primary w-100 mt-auto rounded-pill fw-bold shadow-sm py-2" 
+                                        data-id="${p.id}" data-name="${safeTitle}" data-price="${price}" 
+                                        onclick="placeOrder(this)">
+                                        <i class="bi bi-cart-plus"></i> เพิ่มลงรถเข็น
+                                    </button>`;
+                            } else if(!currentUser) {
+                                buyUI = `<button class="btn btn-outline-primary w-100 mt-auto rounded-pill fw-bold py-2" onclick="openAuth()">เข้าสู่ระบบเพื่อสั่งซื้อ</button>`;
+                            }
+
+                            const delayDuration = (index % 4) * 50;
+
+                            grid.innerHTML += `
+                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 product-item" data-category="${category}" data-aos="fade-up" data-aos-delay="${delayDuration}">
+                                    <div class="store-card">
+                                        <div class="card-img-wrapper" data-src="${imgSrc}" data-title="${safeTitle}" onclick="zoomImage(this)">
+                                            <img src="${imgSrc}" class="store-card-img">
+                                            <div class="stock-badge ${badgeClass}">${badgeText}</div>
+                                            ${adminUI}
+                                        </div>
+                                        <div class="p-3 d-flex flex-column flex-grow-1 bg-white">
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <p class="text-muted small fw-bold m-0" style="font-size: 0.75rem;">SKU: #${p.id.toString().padStart(4,'0')}</p>
+                                                <span class="badge bg-light text-primary border" style="font-size: 0.7rem;">${category}</span>
+                                            </div>
+                                            <h6 class="fw-bold mb-2 product-title" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4;">${rawName}</h6>
+                                            <h4 class="fw-bold text-primary mb-3 mt-auto">฿${price.toLocaleString()}</h4>
+                                            ${buyUI}
+                                        </div>
+                                    </div>
+                                </div>`;
+                        });
+                        setTimeout(() => AOS.refresh(), 100);
+
+                    } else {
+                        grid.innerHTML = `<div class="col-12 text-center py-5 text-muted"><i class="bi bi-shop fs-1 d-block mb-3"></i><h5>คลังสินค้าว่างเปล่า</h5></div>`;
+                    }
+
+                    if(currentUser?.role === 'admin') {
+                        document.getElementById('dashTotalItems').innerText = count.toLocaleString();
+                        document.getElementById('dashTotalValue').innerText = `฿${totalVal.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+                        document.getElementById('dashLowStock').innerText = lowCount.toLocaleString();
+                    }
+                    
+                    searchProducts();
+                })
+                .catch(err => {
+                    grid.innerHTML = `<div class="col-12 text-center py-5 text-danger"><h5>ไม่สามารถดึงข้อมูลได้</h5></div>`;
+                });
+        }
+
+        function filterCategory(cat, element) {
+            currentFilterCategory = cat;
+            document.getElementById('searchInput').value = '';
+            
+            if(element) {
+                document.querySelectorAll('.category-box').forEach(el => el.classList.remove('active'));
+                element.classList.add('active');
+            }
+            searchProducts();
+        }
+
+        function searchProducts() {
+            const input = document.getElementById("searchInput").value.toLowerCase();
+            document.querySelectorAll(".product-item").forEach(item => {
+                const title = item.querySelector(".product-title").innerText.toLowerCase();
+                const itemCategory = item.getAttribute("data-category");
+                
+                const textMatch = title.includes(input);
+                const categoryMatch = currentFilterCategory === '' || itemCategory === currentFilterCategory;
+
+                item.style.display = (textMatch && categoryMatch) ? "block" : "none";
+            });
+            setTimeout(() => AOS.refresh(), 50);
+        }
+
+        // ---------------- ORDER & ADMIN SYSTEM ----------------
+        function placeOrder(element) {
+            const productId = element.getAttribute('data-id');
+            const productName = element.getAttribute('data-name');
+            const price = parseFloat(element.getAttribute('data-price'));
+
+            Swal.fire({
+                title: 'ยืนยันชำระเงิน?',
+                html: `สั่งซื้อ: <b>${productName}</b><br>ยอดรวม: <b class="text-primary fs-4">฿${price.toLocaleString()}</b>`,
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#2563eb',
+                confirmButtonText: '<i class="bi bi-credit-card"></i> ชำระเงินเลย',
+                cancelButtonText: 'ยกเลิก'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({ title: 'กำลังทำรายการ...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+                    fetch(`${apiUrl}/orders.php`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ user_id: currentUser.id, product_id: productId, product_name: productName, price: price })
+                    })
+                    .then(res => res.json().then(data => ({ status: res.status, body: data })))
+                    .then(result => {
+                        if(result.status === 201) {
+                            Swal.fire({ icon: 'success', title: 'สั่งซื้อสำเร็จ!', text: 'ระบบได้รับคำสั่งซื้อแล้ว', confirmButtonColor: '#10b981' });
+                            loadProducts(); 
+                        } else {
+                            Swal.fire('ข้อผิดพลาด', result.body.message, 'error');
+                        }
+                    });
+                }
+            });
+        }
+
+        function loadMyOrders() {
+            const list = document.getElementById('orderList');
+            list.innerHTML = '<div class="col-12 text-center py-5"><div class="spinner-border text-primary"></div></div>';
+
+            fetch(`${apiUrl}/orders.php?user_id=${currentUser.id}`)
+                .then(res => res.json())
+                .then(data => {
+                    list.innerHTML = '';
+                    if(data.data && data.data.length > 0) {
+                        data.data.forEach((order, idx) => {
+                            const statuses = { 'pending': 'รอยืนยัน', 'processing': 'กำลังเตรียมจัดส่ง', 'shipping': 'อยู่ระหว่างจัดส่ง', 'delivered': 'จัดส่งสำเร็จ' };
+                            const badgeColors = { 'pending': 'bg-warning text-dark', 'processing': 'bg-info', 'shipping': 'bg-primary', 'delivered': 'bg-success' };
+                            
+                            list.innerHTML += `
+                                <div class="col-md-6" data-aos="fade-up" data-aos-delay="${(idx % 2) * 50}">
+                                    <div class="card order-card shadow-sm border-0 rounded-4 p-4 h-100 bg-white">
+                                        <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
+                                            <h6 class="fw-bold m-0 text-muted small">ID: #ORD-${order.id.toString().padStart(4, '0')}</h6>
+                                            <span class="badge ${badgeColors[order.status]} rounded-pill px-3 py-1 shadow-sm">${statuses[order.status]}</span>
+                                        </div>
+                                        <h6 class="fw-bold mb-2 text-truncate">${order.product_name}</h6>
+                                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                                            <p class="text-primary fw-bold fs-5 m-0">฿${parseFloat(order.price).toLocaleString()}</p>
+                                            <p class="small text-muted m-0 bg-light px-2 py-1 rounded-pill" style="font-size: 0.75rem;"><i class="bi bi-clock"></i> ${new Date(order.order_date).toLocaleDateString('th-TH')}</p>
+                                        </div>
+                                    </div>
+                                </div>`;
+                        });
+                        setTimeout(() => AOS.refresh(), 100);
+                    } else {
+                        list.innerHTML = `<div class="col-12 text-center py-5 text-muted"><i class="bi bi-cart-x fs-1 d-block mb-3"></i><h5>คุณยังไม่เคยสั่งซื้อสินค้า</h5></div>`;
+                    }
+                });
+        }
+
+        function loadAdminOrders() {
+            const tbody = document.getElementById('adminOrderList');
+            fetch(`${apiUrl}/orders.php`)
+                .then(res => res.json())
+                .then(data => {
+                    tbody.innerHTML = '';
+                    if(data.data && data.data.length > 0) {
+                        data.data.slice(0, 10).forEach(order => { 
+                            const statuses = { 'pending': 'รอยืนยัน', 'processing': 'กำลังเตรียม', 'shipping': 'จัดส่ง', 'delivered': 'สำเร็จ' };
+                            const badgeClass = order.status === 'delivered' ? 'bg-success' : 'bg-warning text-dark';
+                            
+                            tbody.innerHTML += `
+                                <tr>
+                                    <td class="fw-bold text-primary">#ORD-${order.id.toString().padStart(4, '0')}</td>
+                                    <td><span class="badge bg-light text-dark border"><i class="bi bi-person"></i> ${order.user_id}</span></td>
+                                    <td class="fw-bold text-truncate" style="max-width: 150px;">${order.product_name}</td>
+                                    <td class="text-success fw-bold">฿${parseFloat(order.price).toLocaleString()}</td>
+                                    <td><span class="badge ${badgeClass} rounded-pill px-2 py-1">${statuses[order.status]}</span></td>
+                                    <td>${new Date(order.order_date).toLocaleDateString('th-TH')}</td>
+                                </tr>`;
+                        });
+                    } else {
+                        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-3">ยังไม่มีรายการสั่งซื้อ</td></tr>`;
+                    }
+                });
+        }
+
+        function previewImage(event) {
+            const preview = document.getElementById('imagePreview');
+            const box = document.getElementById('uploadBox');
+            if (event.target.files[0]) {
+                preview.src = URL.createObjectURL(event.target.files[0]);
+                preview.style.display = 'block';
+                box.style.display = 'none';
+            }
+        }
+
+        function openProductModal() {
+            document.getElementById('productForm').reset();
+            document.getElementById('productId').value = '';
+            document.getElementById('currentImagePath').value = '';
+            document.getElementById('productCategory').value = 'คอมพิวเตอร์ประกอบ';
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('uploadBox').style.display = 'flex';
+            document.getElementById('modalTitle').innerText = 'เพิ่มคอลเลกชันใหม่';
+            productModal.show();
+        }
+
+        function zoomImage(element) {
+            const src = element.getAttribute('data-src');
+            const title = element.getAttribute('data-title');
+            Swal.fire({ title: title, imageUrl: src, imageAlt: title, width: 700, showConfirmButton: false, background: 'transparent', color: '#fff', backdrop: `rgba(15, 23, 42, 0.95)`, showCloseButton: true });
+        }
+
+        function editProduct(element) {
+            const id = element.getAttribute('data-id');
+            const name = element.getAttribute('data-name');
+            const category = element.getAttribute('data-category');
+            const price = element.getAttribute('data-price');
+            const stock = element.getAttribute('data-stock');
+            const image = element.getAttribute('data-image');
+
+            document.getElementById('productId').value = id;
+            document.getElementById('productName').value = name;
+            document.getElementById('productCategory').value = category || 'อื่นๆ';
+            document.getElementById('productPrice').value = price;
+            document.getElementById('productStock').value = stock;
+            document.getElementById('currentImagePath').value = image;
+            
+            if(image && image !== 'null' && image !== '') { 
+                document.getElementById('imagePreview').src = `${apiUrl}/${image}`; 
+                document.getElementById('imagePreview').style.display = 'block'; 
+                document.getElementById('uploadBox').style.display = 'none';
+            } else { 
+                document.getElementById('imagePreview').style.display = 'none'; 
+                document.getElementById('uploadBox').style.display = 'flex';
+            }
+            
+            document.getElementById('modalTitle').innerText = `แก้ไขข้อมูลรหัส #${id}`;
+            productModal.show();
+        }
+
+        async function saveProduct() {
+            const id = document.getElementById('productId').value;
+            const name = document.getElementById('productName').value;
+            const category = document.getElementById('productCategory').value;
+            const price = document.getElementById('productPrice').value;
+            const stock = document.getElementById('productStock').value;
+            const fileInput = document.getElementById('productImage');
+            
+            if(!name || !price || !stock) return Swal.fire('แจ้งเตือน', 'กรุณากรอกข้อมูลให้ครบ', 'warning');
+
+            Swal.fire({ title: 'กำลังซิงค์ข้อมูล...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            let finalImagePath = document.getElementById('currentImagePath').value;
+
+            if (fileInput.files.length > 0) {
+                const formData = new FormData();
+                formData.append("product_image", fileInput.files[0]);
+                try {
+                    const uploadRes = await fetch(`${apiUrl}/upload_image.php`, { method: 'POST', body: formData });
+                    const uploadData = await uploadRes.json();
+                    if(uploadRes.ok) finalImagePath = uploadData.image_path;
+                    else return Swal.fire('Error', uploadData.message, 'error');
+                } catch (err) { return Swal.fire('Error', 'อัปโหลดรูปล้มเหลว', 'error'); }
+            }
+
+            fetch(id ? `${apiUrl}/update_product.php` : `${apiUrl}/create_product.php`, {
+                method: id ? 'PUT' : 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, name, category, price, stock, image: finalImagePath })
+            })
+            .then(res => res.json())
+            .then(data => {
+                productModal.hide();
+                Swal.fire({icon: 'success', title: 'อัปเดตสำเร็จ', showConfirmButton: false, timer: 1500});
+                loadProducts();
+            })
+            .catch(err => Swal.fire('Error', 'บันทึกไม่สำเร็จ', 'error'));
+        }
+
+        function deleteProduct(id) {
+            Swal.fire({
+                title: 'ลบสินค้านี้?', text: "ข้อมูลจะถูกลบออกจากฐานข้อมูลถาวร", icon: 'warning',
+                showCancelButton: true, confirmButtonColor: '#ef4444', cancelButtonColor: '#94a3b8',
+                confirmButtonText: '<i class="bi bi-trash"></i> ยืนยันลบ', cancelButtonText: 'ยกเลิก'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({ title: 'กำลังทำลาย...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+                    fetch(`${apiUrl}/delete_product.php`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) })
+                    .then(() => { Swal.fire({icon: 'success', title: 'ลบเรียบร้อย', showConfirmButton: false, timer: 1500}); loadProducts(); })
+                    .catch(err => Swal.fire('Error', 'เกิดข้อผิดพลาดในการลบ', 'error'));
+                }
+            });
+        }
+    </script>
+</body>
+</html>
